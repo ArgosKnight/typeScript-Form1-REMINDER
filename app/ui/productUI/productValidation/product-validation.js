@@ -15,8 +15,8 @@ const productSchema = {
         barcode: { type: 'string' },
         description: { type: 'string' },
         keywords: { type: 'array', items: { type: 'string' } },
-        createdAt: { type: 'string', format: 'date-time' },
-        updatedAt: { type: 'string', format: 'date-time' },
+        createdAt: { type: 'string' },
+        updatedAt: { type: 'string' },
         price: { type: 'number' },
         isActive: { type: 'boolean' },
         category: { type: 'string' }
