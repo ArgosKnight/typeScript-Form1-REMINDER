@@ -59,7 +59,7 @@ exports.productRouter.post('/add', (req, res, next) => __awaiter(void 0, void 0,
     try {
         const isValidProduct = (0, product_validation_1.validateProduct)(req.body);
         if (!isValidProduct) {
-            res.send('INVALID PRODUCT');
+            res.send('INVALID DATA FOR PRODUCT');
         }
         else {
             const { name, brand, bardCode, description, keywords, createAt, updateAt, price, isActive } = req.body;
@@ -73,13 +73,19 @@ exports.productRouter.post('/add', (req, res, next) => __awaiter(void 0, void 0,
 }));
 exports.productRouter.put('/edit/:id', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const productId = req.params.id;
-        const updatedProduct = req.body;
-        const product = yield new edit_id_product_1.EditProductById(product_schema_1.Product).execute(productId, updatedProduct);
-        if (!product) {
-            return res.status(404).json({ message: 'Product not found' });
+        const isValidProduct = (0, product_validation_1.validateProduct)(req.body);
+        if (!isValidProduct) {
+            res.send('INVALID DATA FOR PRODUCT - CHECK PARAMETS');
         }
-        return res.json(product);
+        else {
+            const productId = req.params.id;
+            const updatedProduct = req.body;
+            const product = yield new edit_id_product_1.EditProductById(product_schema_1.Product).execute(productId, updatedProduct);
+            if (!product) {
+                return res.status(404).json({ message: 'PRODUCT NOT FOUND' });
+            }
+            return res.json(product);
+        }
     }
     catch (err) {
         next(err);
@@ -87,13 +93,19 @@ exports.productRouter.put('/edit/:id', (req, res, next) => __awaiter(void 0, voi
 }));
 exports.productRouter.put('/:id/price', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const productId = req.params.id;
-        const newPrice = req.body.price;
-        const product = yield new edit_price_product_1.EditProductByPrice(product_schema_1.Product).execute(productId, newPrice);
-        if (!product) {
-            return res.status(404).send({ message: 'Producto no encontrado' });
+        const isValidProduct = (0, product_validation_1.validateProduct)(req.body);
+        if (!isValidProduct) {
+            res.send('INVALID PRICE FOR PRODUCT');
         }
-        res.send(product);
+        else {
+            const productId = req.params.id;
+            const newPrice = req.body.price;
+            const product = yield new edit_price_product_1.EditProductByPrice(product_schema_1.Product).execute(productId, newPrice);
+            if (!product) {
+                return res.status(404).send({ message: 'PRODUCT NOT FOUND' });
+            }
+            res.send(product);
+        }
     }
     catch (err) {
         next(err);
@@ -101,13 +113,19 @@ exports.productRouter.put('/:id/price', (req, res, next) => __awaiter(void 0, vo
 }));
 exports.productRouter.put('/:id/status', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const productId = req.params.id;
-        const isActive = req.body.isActive;
-        const product = yield new edit_status_product_1.EditProductByStatus(product_schema_1.Product).execute(productId, isActive);
-        if (!product) {
-            return res.status(404).send({ message: 'Producto no encontrado' });
+        const isValidProduct = (0, product_validation_1.validateProduct)(req.body);
+        if (!isValidProduct) {
+            res.send('INVALID PRICE FOR PRODUCT');
         }
-        res.status(200).send(product);
+        else {
+            const productId = req.params.id;
+            const isActive = req.body.isActive;
+            const product = yield new edit_status_product_1.EditProductByStatus(product_schema_1.Product).execute(productId, isActive);
+            if (!product) {
+                return res.status(404).send({ message: ' PRODUCT NOT FOUND' });
+            }
+            res.status(200).send(product);
+        }
     }
     catch (err) {
         next(err);

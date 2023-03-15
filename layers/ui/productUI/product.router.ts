@@ -46,7 +46,7 @@ productRouter.post('/add', async (req, res,next)=>{
     try{
         const isValidProduct = validateProduct(req.body)
         if(!isValidProduct){
-            res.send('INVALID PRODUCT')
+            res.send('INVALID DATA FOR PRODUCT')
         }else{
             const { name, brand, bardCode, description, keywords, createAt, updateAt, price, isActive } = req.body;
             const product: IProduct = await new AddProduct(Product).execute(name, brand, bardCode, description, keywords,createAt, updateAt, price, isActive);
@@ -59,27 +59,37 @@ productRouter.post('/add', async (req, res,next)=>{
 
 productRouter.put('/edit/:id', async (req, res, next) => {
     try {
-        const productId = req.params.id;
-        const updatedProduct = req.body;
-        const product: IProduct | null = await new EditProductById(Product).execute(productId, updatedProduct);
-        if (!product) {
-            return res.status(404).json({ message: 'Product not found' });
+        const isValidProduct = validateProduct(req.body)
+        if(!isValidProduct){
+            res.send('INVALID DATA FOR PRODUCT - CHECK PARAMETS')
+        }else{
+            const productId = req.params.id
+            const updatedProduct = req.body
+            const product: IProduct | null = await new EditProductById(Product).execute(productId, updatedProduct);
+            if(!product){
+                return res.status(404).json({message: 'PRODUCT NOT FOUND'})
+            }
+            return res.json(product)
         }
-        return res.json(product);
     } catch (err) {
-        next(err);
+        next(err)
     }
 });
 
-productRouter.put('/:id/price', async(req, res,next)=>{
+productRouter.put('/:id/price', async(req, res,next)=>{ 
     try {
-        const productId = req.params.id;
-        const newPrice = req.body.price;
-        const product: IProduct | null = await new EditProductByPrice(Product).execute(productId, newPrice);
-        if (!product) {
-            return res.status(404).send({ message: 'Producto no encontrado' });
+        const isValidProduct = validateProduct(req.body)
+        if(!isValidProduct){
+            res.send('INVALID PRICE FOR PRODUCT')
+        }else{
+            const productId  = req.params.id;
+            const newPrice = req.body.price;
+            const product: IProduct | null = await new EditProductByPrice(Product).execute(productId, newPrice);
+            if(!product){
+                return res.status(404).send({message: 'PRODUCT NOT FOUND'})
+            }
+            res.send(product)
         }
-        res.send(product);
     } catch (err) {
         next(err)
     }
@@ -88,13 +98,18 @@ productRouter.put('/:id/price', async(req, res,next)=>{
 
 productRouter.put('/:id/status', async (req, res, next)=>{
     try {
-        const productId = req.params.id;
-        const isActive = req.body.isActive;
-        const product: IProduct | null = await new EditProductByStatus(Product).execute(productId, isActive);
-        if (!product) {
-            return res.status(404).send({ message: 'Producto no encontrado' });
+        const isValidProduct = validateProduct(req.body)
+        if(!isValidProduct){
+            res.send('INVALID PRICE FOR PRODUCT')
+        }else{
+            const productId = req.params.id;
+            const isActive = req.body.isActive;
+            const product: IProduct | null = await new EditProductByStatus(Product).execute(productId, isActive);
+            if(!product){
+                return res.status(404).send({message: ' PRODUCT NOT FOUND'})
+            }
+            res.status(200).send(product)
         }
-        res.status(200).send(product);
     } catch (err) {
         next(err)
     }
