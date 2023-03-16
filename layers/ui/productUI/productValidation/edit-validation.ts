@@ -1,8 +1,7 @@
 import ajvInstance from "../../utils/ajvInstance";
 
-
-const productSchema ={
-    type: 'object',
+const productSchema={
+    type:'object',
     properties:{
         name:{type:'string'},
         brand:{type:'string'},
@@ -12,11 +11,9 @@ const productSchema ={
         price:{type:'number'},
         isActive:{type:'boolean'}
     },
-    required:['name','brand','bardCode','description','keywords','price','isActive'],
+    required:[],
     additionalProperties:true
-};
+}
+const validEditProduct = ajvInstance.compile(productSchema);
 
-
-const validateProduct = ajvInstance.compile(productSchema);
-
-export { validateProduct }
+export { validEditProduct }

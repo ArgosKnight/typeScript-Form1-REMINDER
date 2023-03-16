@@ -1,4 +1,5 @@
 import express from "express";
+
 import { IProduct, Product } from "../../data-acces/productSchema/product-schema";
 import { ListProducts } from "../../businessLogic/product/list-product";
 import { GetProductById } from "../../businessLogic/product/get-products-id";
@@ -8,8 +9,13 @@ import { DeleteProdcut } from "../../businessLogic/product/delete-product";
 import { EditProductById } from "../../businessLogic/product/edit-id-product";
 import { EditProductByPrice } from "../../businessLogic/product/edit-price-product";
 import { EditProductByStatus } from "../../businessLogic/product/edit-status-product";
+
 import { stringToObjectId } from "../utils/stringToObjectId";
+
+import { validEditProduct } from "./productValidation/edit-validation";
 import { validateProduct } from "./productValidation/product-validation";
+import { validPriceProduct } from "./productValidation/price-validation";
+import { validStatusProdcut } from "./productValidation/status-validation";
 
 export const productRouter = express.Router()
 
@@ -46,10 +52,10 @@ productRouter.post('/add', async (req, res,next)=>{
     try{
         const isValidProduct = validateProduct(req.body)
         if(!isValidProduct){
-            res.send('INVALID DATA FOR PRODUCT')
+            res.send('INVALID DATA FOR PRODUCT - CHECK PARAMETS')
         }else{
-            const { name, brand, bardCode, description, keywords, createAt, updateAt, price, isActive } = req.body;
-            const product: IProduct = await new AddProduct(Product).execute(name, brand, bardCode, description, keywords,createAt, updateAt, price, isActive);
+            const { name, brand, bardCode, description, keywords, createAt, updateAt, price, isActive, category} = req.body;
+            const product: IProduct = await new AddProduct(Product).execute(name, brand, bardCode, description, keywords,createAt, updateAt, price, isActive, category);
             res.send(product)
         }
     }catch(err){
@@ -59,8 +65,8 @@ productRouter.post('/add', async (req, res,next)=>{
 
 productRouter.put('/edit/:id', async (req, res, next) => {
     try {
-        const isValidProduct = validateProduct(req.body)
-        if(!isValidProduct){
+        const isValidEdit= validEditProduct(req.body)
+        if(!isValidEdit){
             res.send('INVALID DATA FOR PRODUCT - CHECK PARAMETS')
         }else{
             const productId = req.params.id
@@ -78,9 +84,9 @@ productRouter.put('/edit/:id', async (req, res, next) => {
 
 productRouter.put('/:id/price', async(req, res,next)=>{ 
 try {
-    const isValidProduct = validateProduct(req.body)
-    if(!isValidProduct){
-        res.status(400).send('INVALID VALUE FOR PRODUCT')
+    const isValidPrice = validPriceProduct(req.body)
+    if(!isValidPrice){
+        res.status(400).send('INVALID PRICE VALUE FOR PRODUCT')
     }else{
         const productId  = req.params.id;
         const newPrice = req.body.price;
@@ -98,9 +104,9 @@ try {
 
 productRouter.put('/:id/status', async (req, res, next)=>{
     try {
-        const isValidProduct = validateProduct(req.body)
-        if(!isValidProduct){
-            res.send('INVALID PRICE FOR PRODUCT')
+        const isValidStatus = validStatusProdcut(req.body)
+        if(!isValidStatus){
+            res.send('INVALID STATUS FOR PRODUCT')
         }else{
             const productId = req.params.id;
             const isActive = req.body.isActive;

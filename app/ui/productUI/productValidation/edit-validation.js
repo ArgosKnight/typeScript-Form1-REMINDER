@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateProduct = void 0;
+exports.validEditProduct = void 0;
 const ajvInstance_1 = __importDefault(require("../../utils/ajvInstance"));
 const productSchema = {
     type: 'object',
@@ -16,8 +16,8 @@ const productSchema = {
         price: { type: 'number' },
         isActive: { type: 'boolean' }
     },
-    required: ['name', 'brand', 'bardCode', 'description', 'keywords', 'price', 'isActive'],
+    required: [],
     additionalProperties: true
 };
-const validateProduct = ajvInstance_1.default.compile(productSchema);
-exports.validateProduct = validateProduct;
+const validEditProduct = ajvInstance_1.default.compile(productSchema);
+exports.validEditProduct = validEditProduct;

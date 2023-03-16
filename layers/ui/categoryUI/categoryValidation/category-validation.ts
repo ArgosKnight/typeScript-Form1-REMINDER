@@ -1,6 +1,4 @@
-import Ajv from 'ajv';
-
-const ajv = new Ajv();
+import ajvInstance from "../../utils/ajvInstance";
 
 const categorySchema = {
   type: 'object',
@@ -11,7 +9,7 @@ const categorySchema = {
   additionalProperties: false,
 };
 
-const validateCategory = ajv.compile(categorySchema);
+const validateCategory = ajvInstance.compile(categorySchema);
 
 export { validateCategory };
 

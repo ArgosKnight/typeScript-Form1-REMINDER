@@ -14,8 +14,9 @@ class AddProduct {
     constructor(productModel) {
         this.productModel = productModel;
     }
-    execute(name, brand, bardCode, description, keywords, createAt, updateAt, price, isActive) {
+    execute(name, brand, bardCode, description, keywords, createAt, updateAt, price, isActive, category) {
         return __awaiter(this, void 0, void 0, function* () {
+            const productCategory = category ? category : null;
             const product = yield this.productModel.create({
                 name,
                 brand,
@@ -25,7 +26,8 @@ class AddProduct {
                 createAt,
                 updateAt,
                 price,
-                isActive
+                isActive,
+                category: productCategory
             });
             return product;
         });
