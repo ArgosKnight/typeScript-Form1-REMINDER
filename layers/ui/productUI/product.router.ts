@@ -10,6 +10,7 @@ import { EditProductById } from "../../businessLogic/product/edit-id-product";
 import { EditProductByPrice } from "../../businessLogic/product/edit-price-product";
 import { EditProductByStatus } from "../../businessLogic/product/edit-status-product";
 
+import { ICategory, Categoria } from "../../data-acces/categorySchema/category-schema";
 import { stringToObjectId } from "../utils/stringToObjectId";
 
 import { validEditProduct } from "./productValidation/edit-validation";
@@ -49,19 +50,19 @@ productRouter.get('/:id', async (req,res,next)=>{
 })
 
 productRouter.post('/add', async (req, res,next)=>{
-    try{
-        const isValidProduct = validateProduct(req.body)
-        if(!isValidProduct){
-            res.send('INVALID DATA FOR PRODUCT - CHECK PARAMETS')
-        }else{
-            const { name, brand, bardCode, description, keywords, createAt, updateAt, price, isActive, category} = req.body;
-            const product: IProduct = await new AddProduct(Product).execute(name, brand, bardCode, description, keywords,createAt, updateAt, price, isActive, category);
-            res.send(product)
+    try {
+        const isValidProduct = validateProduct(req.body);
+        if (!isValidProduct) {
+          res.send('INVALID DATA FOR PRODUCT - CHECK PARAMETS');
+        } else {
+          const { name, brand, bardCode, description, keywords, price, isActive, category } = req.body;
+          const product: IProduct = await new AddProduct(Product, Categoria).execute(name, brand, bardCode, description, keywords, new Date(), new Date(), price, isActive, category);
+          res.send(product);
         }
-    }catch(err){
-        next(err)
-    }
-})
+      } catch (err) {
+        next(err);
+      }
+    });
 
 productRouter.put('/edit/:id', async (req, res, next) => {
     try {

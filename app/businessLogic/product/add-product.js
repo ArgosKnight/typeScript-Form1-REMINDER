@@ -11,20 +11,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AddProduct = void 0;
 class AddProduct {
-    constructor(productModel) {
+    constructor(productModel, categoryModel) {
         this.productModel = productModel;
+        this.categoryModel = categoryModel;
     }
     execute(name, brand, bardCode, description, keywords, createAt, updateAt, price, isActive, category) {
         return __awaiter(this, void 0, void 0, function* () {
-            const productCategory = category ? category : null;
+            let productCategory = null;
+            if (category) {
+                const categoryObj = yield this.categoryModel.findById(category);
+                productCategory = categoryObj ? categoryObj._id : null;
+            }
             const product = yield this.productModel.create({
                 name,
                 brand,
                 bardCode,
                 description,
                 keywords,
-                createAt,
-                updateAt,
                 price,
                 isActive,
                 category: productCategory

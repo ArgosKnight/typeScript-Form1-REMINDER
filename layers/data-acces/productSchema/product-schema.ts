@@ -38,7 +38,7 @@ const ProductSchema: Schema = new mongoose.Schema({
     type: [String],
   },
   createdAt: {
-    type: Date,
+    type: Date, default: Date.now 
   },
   updatedAt: {
     type: Date,
@@ -53,6 +53,10 @@ const ProductSchema: Schema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Categoria',
   }
+});
+
+ProductSchema.pre('updateOne', function() { // Middleware pre para actualizar el documento
+  this.set({ updatedAt: new Date() }); // Establece la fecha actual en updatedAt
 });
 
 const Product: Model<IProduct> = mongoose.model<IProduct>('products', ProductSchema);

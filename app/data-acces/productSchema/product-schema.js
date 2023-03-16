@@ -28,7 +28,7 @@ const ProductSchema = new mongoose_1.default.Schema({
         type: [String],
     },
     createdAt: {
-        type: Date,
+        type: Date, default: Date.now
     },
     updatedAt: {
         type: Date,
@@ -43,6 +43,9 @@ const ProductSchema = new mongoose_1.default.Schema({
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: 'Categoria',
     }
+});
+ProductSchema.pre('updateOne', function () {
+    this.set({ updatedAt: new Date() }); // Establece la fecha actual en updatedAt
 });
 const Product = mongoose_1.default.model('products', ProductSchema);
 exports.Product = Product;

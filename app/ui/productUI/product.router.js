@@ -23,6 +23,7 @@ const delete_product_1 = require("../../businessLogic/product/delete-product");
 const edit_id_product_1 = require("../../businessLogic/product/edit-id-product");
 const edit_price_product_1 = require("../../businessLogic/product/edit-price-product");
 const edit_status_product_1 = require("../../businessLogic/product/edit-status-product");
+const category_schema_1 = require("../../data-acces/categorySchema/category-schema");
 const stringToObjectId_1 = require("../utils/stringToObjectId");
 const edit_validation_1 = require("./productValidation/edit-validation");
 const product_validation_1 = require("./productValidation/product-validation");
@@ -65,8 +66,8 @@ exports.productRouter.post('/add', (req, res, next) => __awaiter(void 0, void 0,
             res.send('INVALID DATA FOR PRODUCT - CHECK PARAMETS');
         }
         else {
-            const { name, brand, bardCode, description, keywords, createAt, updateAt, price, isActive, category } = req.body;
-            const product = yield new add_product_1.AddProduct(product_schema_1.Product).execute(name, brand, bardCode, description, keywords, createAt, updateAt, price, isActive, category);
+            const { name, brand, bardCode, description, keywords, price, isActive, category } = req.body;
+            const product = yield new add_product_1.AddProduct(product_schema_1.Product, category_schema_1.Categoria).execute(name, brand, bardCode, description, keywords, new Date(), new Date(), price, isActive, category);
             res.send(product);
         }
     }
