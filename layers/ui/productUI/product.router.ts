@@ -77,22 +77,22 @@ productRouter.put('/edit/:id', async (req, res, next) => {
 });
 
 productRouter.put('/:id/price', async(req, res,next)=>{ 
-    try {
-        const isValidProduct = validateProduct(req.body)
-        if(!isValidProduct){
-            res.send('INVALID PRICE FOR PRODUCT')
-        }else{
-            const productId  = req.params.id;
-            const newPrice = req.body.price;
-            const product: IProduct | null = await new EditProductByPrice(Product).execute(productId, newPrice);
-            if(!product){
-                return res.status(404).send({message: 'PRODUCT NOT FOUND'})
-            }
-            res.send(product)
+try {
+    const isValidProduct = validateProduct(req.body)
+    if(!isValidProduct){
+        res.status(400).send('INVALID VALUE FOR PRODUCT')
+    }else{
+        const productId  = req.params.id;
+        const newPrice = req.body.price;
+        const product: IProduct | null = await new EditProductByPrice(Product).execute(productId, newPrice);
+        if(!product){
+            return res.status(404).send({message: 'PRODUCT NOT FOUND'})
         }
-    } catch (err) {
-        next(err)
+        res.send(product)
     }
+} catch (err) {
+    next(err)
+}
 })
 
 

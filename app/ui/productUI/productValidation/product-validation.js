@@ -21,7 +21,7 @@ const productSchema = {
         isActive: { type: 'boolean' },
         category: { type: 'string' }
     },
-    required: ['name', 'brand', 'barcode', 'price', 'category'],
+    required: [],
     additionalProperties: false,
 };
 const validateProduct = ajv.compile(productSchema);

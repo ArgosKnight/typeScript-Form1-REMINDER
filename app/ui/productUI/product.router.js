@@ -95,7 +95,7 @@ exports.productRouter.put('/:id/price', (req, res, next) => __awaiter(void 0, vo
     try {
         const isValidProduct = (0, product_validation_1.validateProduct)(req.body);
         if (!isValidProduct) {
-            res.send('INVALID PRICE FOR PRODUCT');
+            res.status(400).send('INVALID VALUE FOR PRODUCT');
         }
         else {
             const productId = req.params.id;

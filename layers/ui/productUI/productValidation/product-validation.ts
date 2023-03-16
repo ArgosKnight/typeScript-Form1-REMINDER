@@ -18,7 +18,7 @@ const productSchema ={
         category: {type: 'string'}
 
     },
-    required:['name', 'brand', 'barcode', 'price', 'category'],
+    required:[],
     additionalProperties: false,
 };
 
