@@ -20,6 +20,7 @@ const get_category_by_id_1 = require("../../businessLogic/category/get-category-
 const add_category_1 = require("../../businessLogic/category/add-category");
 const stringToObjectId_1 = require("../utils/stringToObjectId");
 const category_validation_1 = require("./categoryValidation/category-validation");
+const validMiddleware_1 = __importDefault(require("../utils/validMiddleware"));
 exports.categoryRouter = express_1.default.Router();
 exports.categoryRouter.get('/', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -45,17 +46,11 @@ exports.categoryRouter.get('/:id', (req, res, next) => __awaiter(void 0, void 0,
         next(err);
     }
 }));
-exports.categoryRouter.post('/add', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.categoryRouter.post('/add', (0, validMiddleware_1.default)(category_validation_1.validateCategory), (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const isValidCategory = (0, category_validation_1.validateCategory)(req.body);
-        if (!isValidCategory) {
-            res.send('Invalid category');
-        }
-        else {
-            const { name } = req.body;
-            const newCategory = yield new add_category_1.AddCategory(category_schema_1.Categoria).execute(name);
-            res.send(newCategory);
-        }
+        const { name } = req.body;
+        const newCategory = yield new add_category_1.AddCategory(category_schema_1.Categoria).execute(name);
+        res.send(newCategory);
     }
     catch (err) {
         next(err);

@@ -3,8 +3,13 @@ import { ICategory, Categoria } from "../../data-acces/categorySchema/category-s
 import { ListCategories } from "../../businessLogic/category/list-category";
 import { GetCategoryById } from "../../businessLogic/category/get-category-by-id";
 import { AddCategory } from "../../businessLogic/category/add-category";
+
 import { stringToObjectId } from "../utils/stringToObjectId";
+
 import { validateCategory } from "./categoryValidation/category-validation";
+import validateSchemaMiddleware from "../utils/validMiddleware";
+
+
 
 export const categoryRouter = express.Router()
 
@@ -31,16 +36,11 @@ categoryRouter.get('/:id', async(req, res, next)=>{
     }
 });
 
-categoryRouter.post('/add', async (req, res, next)=>{
+categoryRouter.post('/add',validateSchemaMiddleware(validateCategory) ,async (req, res, next)=>{
   try {
-    const isValidCategory = validateCategory(req.body);
-    if (!isValidCategory) {
-      res.send('Invalid category');
-    } else {
       const { name } = req.body; 
       const newCategory: ICategory = await new AddCategory(Categoria).execute(name);
       res.send(newCategory);
-    }
   } catch (err) {
     next(err);
   }
