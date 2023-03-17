@@ -6,7 +6,7 @@ const productSchema={
         name:{type:'string'},
         brand:{type:'string'},
         bardCode:{type:'string'},
-        descriptrion:{type:'string'},
+        description:{type:'string'},
         keywords:{type:'array', items:{type:'string'}},
         price:{type:'number'},
         isActive:{type:'boolean'}

@@ -88,6 +88,9 @@ exports.productRouter.put('/edit/:id', (req, res, next) => __awaiter(void 0, voi
             if (!product) {
                 return res.status(404).json({ message: 'PRODUCT NOT FOUND' });
             }
+            console.log(edit_validation_1.validEditProduct);
+            console.log(productId);
+            console.log(updatedProduct);
             return res.json(product);
         }
     }

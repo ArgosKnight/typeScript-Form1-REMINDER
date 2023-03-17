@@ -20,7 +20,7 @@ import { validStatusProdcut } from "./productValidation/status-validation";
 
 export const productRouter = express.Router()
 
-productRouter.get('/', async (req, res,next)=>{
+productRouter.get('/', async (req, res, next) => {
     try {
         const estado = req.query.isActive === 'true' ? true : req.query.isActive === 'false' ? false : undefined;
         const products: IProduct[] = await new ListProducts(Product).execute(estado);
@@ -30,7 +30,7 @@ productRouter.get('/', async (req, res,next)=>{
     }
 });
 
-productRouter.get('/prom-price', async (req, res, next)=>{
+productRouter.get('/prom-price', async (req, res, next) => {
     try {
         const promPrice = await new PromPriceProduct(Product).execute();
         res.json({ avgPrice: promPrice.avgPrice });
@@ -39,7 +39,7 @@ productRouter.get('/prom-price', async (req, res, next)=>{
     }
 });
 
-productRouter.get('/:id', async (req,res,next)=>{
+productRouter.get('/:id', async (req, res, next) => {
     try {
         const id = stringToObjectId(req.params.id);
         const product: IProduct | null = await new GetProductById(Product).execute(id)
@@ -49,33 +49,36 @@ productRouter.get('/:id', async (req,res,next)=>{
     }
 })
 
-productRouter.post('/add', async (req, res,next)=>{
+productRouter.post('/add', async (req, res, next) => {
     try {
         const isValidProduct = validateProduct(req.body);
         if (!isValidProduct) {
-          res.send('INVALID DATA FOR PRODUCT - CHECK PARAMETS');
+            res.send('INVALID DATA FOR PRODUCT - CHECK PARAMETS');
         } else {
-          const { name, brand, bardCode, description, keywords, price, isActive, category } = req.body;
-          const product: IProduct = await new AddProduct(Product, Categoria).execute(name, brand, bardCode, description, keywords, new Date(), new Date(), price, isActive, category);
-          res.send(product);
+            const { name, brand, bardCode, description, keywords, price, isActive, category } = req.body;
+            const product: IProduct = await new AddProduct(Product, Categoria).execute(name, brand, bardCode, description, keywords, new Date(), new Date(), price, isActive, category);
+            res.send(product);
         }
-      } catch (err) {
+    } catch (err) {
         next(err);
-      }
-    });
+    }
+});
 
 productRouter.put('/edit/:id', async (req, res, next) => {
     try {
-        const isValidEdit= validEditProduct(req.body)
-        if(!isValidEdit){
+        const isValidEdit = validEditProduct(req.body)
+        if (!isValidEdit) {
             res.send('INVALID DATA FOR PRODUCT - CHECK PARAMETS')
-        }else{
+        } else {
             const productId = req.params.id
             const updatedProduct = req.body
             const product: IProduct | null = await new EditProductById(Product).execute(productId, updatedProduct);
-            if(!product){
-                return res.status(404).json({message: 'PRODUCT NOT FOUND'})
+            if (!product) {
+                return res.status(404).json({ message: 'PRODUCT NOT FOUND' })
             }
+            console.log(validEditProduct)
+            console.log(productId)
+            console.log(updatedProduct)
             return res.json(product)
         }
     } catch (err) {
@@ -83,37 +86,37 @@ productRouter.put('/edit/:id', async (req, res, next) => {
     }
 });
 
-productRouter.put('/:id/price', async(req, res,next)=>{ 
-try {
-    const isValidPrice = validPriceProduct(req.body)
-    if(!isValidPrice){
-        res.status(400).send('INVALID PRICE VALUE FOR PRODUCT')
-    }else{
-        const productId  = req.params.id;
-        const newPrice = req.body.price;
-        const product: IProduct | null = await new EditProductByPrice(Product).execute(productId, newPrice);
-        if(!product){
-            return res.status(404).send({message: 'PRODUCT NOT FOUND'})
+productRouter.put('/:id/price', async (req, res, next) => {
+    try {
+        const isValidPrice = validPriceProduct(req.body)
+        if (!isValidPrice) {
+            res.status(400).send('INVALID PRICE VALUE FOR PRODUCT')
+        } else {
+            const productId = req.params.id;
+            const newPrice = req.body.price;
+            const product: IProduct | null = await new EditProductByPrice(Product).execute(productId, newPrice);
+            if (!product) {
+                return res.status(404).send({ message: 'PRODUCT NOT FOUND' })
+            }
+            res.send(product)
         }
-        res.send(product)
+    } catch (err) {
+        next(err)
     }
-} catch (err) {
-    next(err)
-}
 })
 
 
-productRouter.put('/:id/status', async (req, res, next)=>{
+productRouter.put('/:id/status', async (req, res, next) => {
     try {
         const isValidStatus = validStatusProdcut(req.body)
-        if(!isValidStatus){
+        if (!isValidStatus) {
             res.send('INVALID STATUS FOR PRODUCT')
-        }else{
+        } else {
             const productId = req.params.id;
             const isActive = req.body.isActive;
             const product: IProduct | null = await new EditProductByStatus(Product).execute(productId, isActive);
-            if(!product){
-                return res.status(404).send({message: ' PRODUCT NOT FOUND'})
+            if (!product) {
+                return res.status(404).send({ message: ' PRODUCT NOT FOUND' })
             }
             res.status(200).send(product)
         }
@@ -122,15 +125,15 @@ productRouter.put('/:id/status', async (req, res, next)=>{
     }
 })
 
-productRouter.delete('/:id', async (req, res, next)=>{
+productRouter.delete('/:id', async (req, res, next) => {
     try {
         const id = stringToObjectId(req.params.id);
         const deletedProduct: IProduct | null = await new DeleteProdcut(Product).execute(id);
         if (!deletedProduct) {
-          return res.status(404).send({ message: 'Producto no encontrado' });
+            return res.status(404).send({ message: 'Producto no encontrado' });
         }
         res.status(200).send({ message: 'Producto eliminado correctamente', deletedProduct });
-      } catch (err) {
+    } catch (err) {
         next(err);
-      }
- });
+    }
+});
